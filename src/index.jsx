@@ -14,7 +14,8 @@ Tips=> "!" inverse la valeur et n'est donc pas opérateur de comparaison !!!
 */
 
 /* @refresh reload */
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal} from 'solid-js';
+import { createStore } from 'solid-js/store'
 import { render } from 'solid-js/web';
 
 //----------- Simple JS
@@ -71,7 +72,8 @@ createEffect(() => {
 })
 // Un effet s'execute à chaque fois qu'il y a une modification à l'interieur ???? d'un getter ? 
 
-//----------- Composant TO-DO
+//----------- Composant TO-DO v1
+document.body.appendChild(<h4>TO-DO v1</h4>)
 
 function to_do(){
   const [todos, setTodos] = createSignal([
@@ -104,6 +106,11 @@ function to_do(){
     // À REVOIR !!
   }
 
+  // createEffect(() => {
+  //   console.log(todos())
+  // })
+
+
   return <>
     <ul>
       <For each={todos()}>
@@ -119,3 +126,56 @@ function to_do(){
 }
 
 render(to_do, document.body)
+
+//----------- Composant TO-DO v2
+document.body.appendChild(<h4>TO-DO v2</h4>)
+
+function to_do2(){
+  const [todos, setTodos] = createStore([
+    {
+      "userId": 1,
+      "id": 1,
+      "title": "Pain hamburger",
+      "completed": true
+    },
+    {
+      "userId": 1,
+      "id": 2,
+      "title": "steack",
+      "completed": true
+    },
+    {
+      "userId": 1,
+      "id": 3,
+      "title": "tomate",
+      "completed": false
+    }
+  ])
+
+  const toggleTodo = (todo) => {
+    setTodos(t => t.id == todo.id, "completed", completed => !completed); // façon brute et statique d'écrire => setTodos(0, "completed", false)
+  }
+
+  // createEffect(() => {
+  //   console.log(todos) // Pour vérifier si le store est bien modifié => surememnt pas adapté pour store
+  //   // car JSON stringify permet de voir les modifs en temps réelles
+  // })
+
+  return <>
+    <ul>
+      <For each={todos}>
+        {
+          (todo)=> <li>
+            <input type='checkbox' checked={todo.completed} onChange={[toggleTodo, todo]}/>
+            {todo.title}
+          </li>
+        }
+      </For>
+    </ul>
+    <pre>
+      {JSON.stringify(todos)}
+    </pre>
+  </>
+}
+
+render(to_do2, document.body)
