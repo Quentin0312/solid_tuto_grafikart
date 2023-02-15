@@ -1,5 +1,17 @@
 // https://youtu.be/gEQLvRb8RA8
 // Code à commenter completemement quand tuto fini
+// Opérateur conditionel et syntaxe de décomposition à revoir !!
+
+/* Concernant l'opérateur conditionel et la syntaxe de decomposition présent dans ce code 
+Ce code est une fonction appelée "toggleTodo" qui prend en paramètre un objet "todo".
+La fonction utilise la méthode "map" pour parcourir le tableau "todos"
+et retourner un nouveau tableau qui contient les mêmes éléments que "todos"
+mais avec une modification : si l'élément a le même id que "todo",
+alors on renvoie un nouvel objet qui copie toutes les propriétés de l'élément,
+sauf "completed" qui est inversé (passé de true à false ou de false à true). Sinon, on renvoie simplement l'élément tel quel.
+
+Tips=> "!" inverse la valeur et n'est donc pas opérateur de comparaison !!!
+*/
 
 /* @refresh reload */
 import { createEffect, createSignal } from 'solid-js';
@@ -53,46 +65,57 @@ render(App, document.body)
 const [temps, setTemps] = createSignal(0)
 
 setInterval(()=> setTemps(n => n + 10),10000) // syntaxe étrange => (n => n + 10)
-//mise en commentaire stoped here
+
 createEffect(() => {
   console.log(temps() + " secondes")
 })
+// Un effet s'execute à chaque fois qu'il y a une modification à l'interieur ???? d'un getter ? 
 
-//-----------
+//----------- Composant TO-DO
 
 function to_do(){
   const [todos, setTodos] = createSignal([
     {
       "userId": 1,
       "id": 1,
-      "title": "delectus aut autem",
+      "title": "Pain hamburger",
       "completed": true
     },
     {
       "userId": 1,
       "id": 2,
-      "title": "aut autem delectus",
-      "completed": false
+      "title": "steack",
+      "completed": true
     },
     {
       "userId": 1,
       "id": 3,
-      "title": "aut autem",
+      "title": "tomate",
       "completed": false
     }
   ])
+
+  // Essayer de réecrire en forme de fonction normale
+  // Mission du composant toggleTodo => quand on intéragit avec la checkBox, ça modifie le "completed" correspondant dans todos()
+  const toggleTodo = (todo) => {
+    setTodos(todos().map(t => t.id == todo.id ? {...t, completed: !t.completed} : t ));
+    //içi syntaxe nouvelle => Opérateur conditionnel => condition ? exprSiVrai : exprSiFaux
+    // ...t correspond à un spread operator ou syntaxe de décomposition
+    // À REVOIR !!
+  }
 
   return <>
     <ul>
       <For each={todos()}>
         {(todo) => <li>
-          <input type='checkbox' checked={todo.completed}/>
+          <input type='checkbox' checked={todo.completed} onChange={[toggleTodo, todo]}/>
           {todo.title}
           </li>}
       </For>
     </ul>
   
   </>
+  // onChange={[toggleTodo, todo]} equivalent de onChange={()=> toggleTodo(todo)}
 }
 
 render(to_do, document.body)
