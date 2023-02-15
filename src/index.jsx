@@ -5,11 +5,11 @@
 import { createEffect, createSignal } from 'solid-js';
 import { render } from 'solid-js/web';
 
-//-----------
+//----------- Simple JS
 
 document.body.appendChild(<h3>Debut de page</h3>)
 
-//-----------
+//----------- Composant JSX (return DOM)
 
 function faireApparaitre() {
   return <h4>Suite page</h4>
@@ -17,7 +17,7 @@ function faireApparaitre() {
 
 render(faireApparaitre, document.body)
 
-//-----------
+//----------- Composant JSX réactif
 
 function App(){
   const [count, setCount] = createSignal(0)
@@ -35,7 +35,7 @@ function App(){
 
 render(App, document.body)
 
-//-----------
+//----------- Element réactif hors composant
 
 const [temps, setTemps] = createSignal(0)
 
